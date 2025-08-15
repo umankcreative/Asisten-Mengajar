@@ -3,12 +3,12 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  ZoomIn, 
-  ZoomOut, 
-  Bookmark, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
+  Bookmark,
   BookmarkPlus,
   Upload,
   Search,
@@ -95,7 +95,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
         .order('page_number');
 
       if (error) throw error;
-      
+
       const formattedBookmarks: Bookmark[] = (data || []).map(bookmark => ({
         id: bookmark.id,
         title: bookmark.title,
@@ -103,7 +103,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
         timestamp: new Date(bookmark.timestamp).getTime(),
         file_id: bookmark.file_id
       }));
-      
+
       setBookmarks(formattedBookmarks);
     } catch (error) {
       console.error('Error loading bookmarks:', error);
@@ -116,12 +116,12 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
       // Load the sample PDF from public folder
       const pdfUrl = '/sample-pdfs/IPAS-BS-KLS-III.pdf';
       const response = await fetch(pdfUrl);
-      
+
       if (response.ok) {
         const blob = await response.blob();
         const file = new File([blob], 'IPAS-BS-KLS-III.pdf', { type: 'application/pdf' });
         setFile(file);
-        
+
         // Create a sample PDF file record if it doesn't exist
         const { data: existingFile } = await supabase
           .from('pdf_files')
@@ -158,7 +158,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
   const onDocumentLoadSuccess = async ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
     setCurrentPage(1);
-    
+
     // Update total pages in database if we have a current PDF file
     if (currentPDFFile && currentPDFFile.total_pages === 0) {
       try {
@@ -166,13 +166,13 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
           .from('pdf_files')
           .update({ total_pages: numPages })
           .eq('id', currentPDFFile.id);
-        
+
         setCurrentPDFFile(prev => prev ? { ...prev, total_pages: numPages } : null);
       } catch (error) {
         console.error('Error updating page count:', error);
       }
     }
-    
+
     toast.success(`PDF loaded successfully! ${numPages} pages found.`);
   };
 
@@ -319,7 +319,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
       )}>
         <div className="p-4 border-b border-border">
           <h2 className="text-lg font-semibold text-foreground mb-4">PDF Reader</h2>
-          
+
           {/* File Upload */}
           <div className="mb-4">
             <Button
@@ -424,7 +424,7 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
               >
                 <Menu className="w-4 h-4" />
               </Button>
-              
+
               {file && (
                 <div className="flex items-center gap-2">
                   <Button
@@ -435,11 +435,11 @@ const PDFReader: React.FC<PDFReaderProps> = ({ className }) => {
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
-                  
+
                   <span className="text-sm font-medium px-3 py-1 bg-secondary rounded">
                     {currentPage} / {numPages}
                   </span>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
